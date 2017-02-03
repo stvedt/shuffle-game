@@ -7,6 +7,8 @@ body {
   margin: 0 auto;
   width: 500px;
   border: 1px solid #000;
+  overflow: auto;
+  font-family: 'Helvetica', sans-serif;
 }
 
 .peice {
@@ -18,4 +20,8 @@ body {
   text-align: center;
   border: 1px solid #000;
   cursor: pointer;
+}
+
+.spacer {
+  background-color: #000;
 }

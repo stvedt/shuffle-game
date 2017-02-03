@@ -20,7 +20,15 @@ var Game = function (){
   this.new = function () {
     for (var i = 0; i < this.board.length; i++) {
       this.peices[i].innerText = this.board[i];
+      // console.log(this.board[i]);
+
+      //check for 16th peice to use as spacer
+      if( this.board[i] === 16 ){
+        // console.log('16');
+        this.peices[i].classList.add("spacer");
+      }
     }
+
   }
   this.reset = function(){
 
