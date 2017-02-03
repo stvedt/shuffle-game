@@ -2,3 +2,20 @@ body {
 
 
 }
+
+.board {
+  margin: 0 auto;
+  width: 500px;
+  border: 1px solid #000;
+}
+
+.peice {
+  float: left;
+  width: 25%;
+  box-sizing: border-box;
+  padding: 25px;
+  font-size: 2em;
+  text-align: center;
+  border: 1px solid #000;
+  cursor: pointer;
+}
