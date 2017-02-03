@@ -3,40 +3,42 @@
 
 var Game = function (){
 
-  this.gameOrder = function(){
+  this.$pieces = $('.piece');
+
+  this.randomBoard = function(){
     var array = []
     while (array.length < 16) {
       var randomnumber = Math.ceil(Math.random()*16)
       if(array.indexOf(randomnumber) > -1) continue;
       array[array.length] = randomnumber;
     }
-
-
     return array;
   }
 
-  this.board = this.gameOrder();
+  this.board = this.randomBoard();
 
-  this.new = function () {
+  this.boardDom = function () {
     for (var i = 0; i < this.board.length; i++) {
-      this.peices[i].innerText = this.board[i];
+      this.$pieces[i].innerText = this.board[i];
       // console.log(this.board[i]);
 
-      //check for 16th peice to use as spacer
+      //check for 16th piece to use as spacer
       if( this.board[i] === 16 ){
         // console.log('16');
-        this.peices[i].classList.add("spacer");
+        this.$pieces[i].classList.add("spacer");
       }
     }
 
   }
-  this.reset = function(){
+  this.new = function(){
+    this.boardDom();
 
   }
-  this.move = function(){
-
+  this.move = function(movedPiece){
+    var clickedPosition = movedPiece.index('.piece') + 1;
+    console.log('index of clicked',clickedPosition);
   }
-  this.peices = document.querySelectorAll('.peice');
+
 
 };
 
@@ -44,6 +46,10 @@ var playGame = new Game();
 
 playGame.new();
 
-console.log(playGame.peices);
+
+var $board = $('.board');
+$board.on('click', function(e){
+  playGame.move($(e.target));
+});
 
 })();
