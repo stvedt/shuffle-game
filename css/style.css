@@ -1,5 +1,5 @@
 body {
-
+  text-align: center;
 
 }
 
@@ -24,4 +24,9 @@ body {
 
 .spacer {
   background-color: #000;
+  cursor: default;
+}
+
+#reset {
+  margin: 10px
 }
