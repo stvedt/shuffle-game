@@ -1,59 +1,66 @@
 (function(){
 // console.log('hi');
 
-var Game = function (){
+var playGame = (function Game(){
 
-  this.$pieces = $('.piece');
-  this.board = [];
-  this.boardCoords = [];
+  var $pieces = document.querySelectorAll('.piece'),
+      board,
+      boardCoords,
+      $board = $('.board'),
+      $reset = $('#reset'),
+      boardHistory = [];
 
-  this.randomBoard = function(){
+   function randomBoard(){
     var array = []
     while (array.length < 16) {
       var randomnumber = Math.ceil(Math.random()*16)
       if(array.indexOf(randomnumber) > -1) continue;
       array[array.length] = randomnumber;
     }
-
-    this.board = array;
-    playGame.buildMultiArr();
+    //
+    // board = array;
+    // buildMultiArr();
     return array;
   }
 
 
-  this.boardDom = function () {
-    this.$pieces.removeClass("spacer");
-    for (var i = 0; i < this.board.length; i++) {
-      this.$pieces[i].innerText = this.board[i];
+  function boardDom() {
+    for (var i = 0; i < board.length; i++) {
+      $pieces[i].classList.remove("spacer");
+      $pieces[i].innerText = board[i];
 
       //check for 16th piece to use as spacer
-      if( this.board[i] === 16 ){
-        this.$pieces[i].classList.add("spacer");
+      if( board[i] === 16 ){
+        $pieces[i].classList.add("spacer");
       }
     }
 
   }
-  this.new = function(){
+
+  function newGame(){
     //reset board
-    this.board = this.randomBoard();
-    this.boardDom();
+    board = randomBoard();
+    boardCoords = buildMultiArr();
+    boardDom();
 
   }
-  this.move = function(movedPiece){
+  function move(movedPiece){
     //handling moving peices
-    var clickedPosition = movedPiece.index('.piece') + 1;
+    var clickedPosition = movedPiece+ 1;
     console.log(clickedPosition);
-    this.determineXY(clickedPosition)
+    determineXY(clickedPosition)
   }
 
-  this.determineXY = function(clickedPosition){
-    var value = this.board[clickedPosition-1];
+  function determineXY (clickedPosition){
+    console.log('determineXY');
+    var value = board[clickedPosition-1];
     var location = [];
+    console.log('value', value);
 
-    for (var outer = 0; outer < this.boardCoords.length; outer++) {
+    for (var outer = 0; outer < boardCoords.length; outer++) {
       for (var inner = 0; inner < 4; inner++) {
-        if (this.boardCoords[outer][inner] == value){
-          location = [outer+1, inner+1];
+        if (boardCoords[outer][inner] == value){
+          location = [inner+1, outer+1];
           console.log(location);
           return location;
         }
@@ -62,7 +69,7 @@ var Game = function (){
 
   }
 
-  this.buildMultiArr = function(){
+  function buildMultiArr(){
     //creating multiDimArray to calculate x,y
     var multiDimArr = [
       [],[],[],[]
@@ -70,35 +77,48 @@ var Game = function (){
 
     for (var outer = 0; outer < multiDimArr.length; outer++) {
       for (var i = 0; i < 4; i++) {
-        multiDimArr[outer][i] = this.board[(outer*4)+i];
+        multiDimArr[outer][i] = board[(outer*4)+i];
       }
     }
 
-    this.boardCoords = multiDimArr;
+    boardCoords = multiDimArr;
     console.log(multiDimArr)
 
     return multiDimArr;
 
   }
 
+  function bindEvents(){
+    // $board.on('click', function(e){
+    //   move($(e.target));
+    // });
+    for (let i = 0; i < $pieces.length; i++) {
+      $pieces[i].addEventListener("click", function(){
+        move(i);
+      }, false);
+    }
 
-};
+    $reset.on('click', function(){
+      newGame();
+    });
+  }
 
-var playGame = new Game();
+  bindEvents();
 
-playGame.new();
+  return {
+    newGame: newGame,
+    move: move
+  }
+
+
+})();
+
+playGame.newGame();
 
 //Jquery elems
-var $board = $('.board');
-var $reset = $('#reset');
 
-$board.on('click', function(e){
-  playGame.move($(e.target));
-});
 
-$reset.on('click', function(){
-  playGame.new();
-});
+
 
 
 
