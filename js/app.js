@@ -40,20 +40,29 @@ var playGame = (function Game(){
   function newGame(){
     //reset board
     board = randomBoard();
+    boardHistory=[];
+    boardHistory.push(board);
     boardCoords = buildMultiArr();
     boardDom();
 
   }
   function move(movedPiece){
     //handling moving peices
-    var clickedPosition = movedPiece+ 1;
-    console.log(clickedPosition);
-    determineXY(clickedPosition)
+    var clickedIndex = board.indexOf(movedPiece);
+    var spacerIndex =  board.indexOf(16)
+
+    boardHistory.push(board);
+    board[clickedIndex]=16;
+    board[spacerIndex]=movedPiece;
+    // console.log(board);
+    console.log('history',boardHistory)
+    determineXY(movedPiece);
+    boardDom();
   }
 
   function determineXY (clickedPosition){
     console.log('determineXY');
-    var value = board[clickedPosition-1];
+    var value = clickedPosition;
     var location = [];
     console.log('value', value);
 
@@ -94,7 +103,7 @@ var playGame = (function Game(){
     // });
     for (let i = 0; i < $pieces.length; i++) {
       $pieces[i].addEventListener("click", function(){
-        move(i);
+        move(parseInt($pieces[i].innerText));
       }, false);
     }
 
