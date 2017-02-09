@@ -8,7 +8,9 @@ var playGame = (function Game(){
       boardCoords,
       $board = $('.board'),
       $reset = $('#reset'),
-      boardHistory = [];
+      boardHistory = [],
+      spacerLocation= [],
+      spacerIndex;
 
    function randomBoard(){
     var array = []
@@ -29,10 +31,47 @@ var playGame = (function Game(){
       $pieces[i].classList.remove("spacer");
       $pieces[i].innerText = board[i];
 
+      // if( spacerLocation[1] == (i%4)+1 ){
+      //   $pieces[i].classList.add("clickable");
+      // }
+
       //check for 16th piece to use as spacer
       if( board[i] === 16 ){
         $pieces[i].classList.add("spacer");
+        spacerLocation = determineXY (16);
+        console.log('spacerLocation',spacerLocation);
       }
+
+      console.log((spacerLocation[0] % 4), (i%4)+1)
+
+      // if( spacerLocation[0] % 4 == (i%4)+1 ){
+      //   $pieces[i].classList.add("clickable");
+      // }
+
+      // switch (spacerLocation[0]) {
+      //   case 1:
+      //     // console.log('hi from first column', spacerIndex);
+      //     if( i = spacerIndex ){
+      //       $pieces[i].classList.add("clickable");
+      //       console.log('hi from first column', spacerIndex);
+      //     }
+      // 
+      //     break;
+      //   default:
+      //     break;
+      //
+      // }
+    //   console.log('y col', spacerLocation[1]%4)
+    //   switch (spacerLocation[1]) {
+    //     case 1:
+    //       if((i+1)%2 == 0){
+    //         $pieces[i].classList.add("clickable");
+    //       }
+    //
+    //       break;
+    //     default:
+    //
+    //   }
     }
 
   }
@@ -43,20 +82,24 @@ var playGame = (function Game(){
     boardHistory=[];
     boardHistory.push(board);
     boardCoords = buildMultiArr();
+    spacerIndex =  board.indexOf(16);
+
     boardDom();
 
   }
   function move(movedPiece){
     //handling moving peices
     var clickedIndex = board.indexOf(movedPiece);
-    var spacerIndex =  board.indexOf(16)
+    spacerIndex =  board.indexOf(16)
 
     boardHistory.push(board);
     board[clickedIndex]=16;
     board[spacerIndex]=movedPiece;
     // console.log(board);
-    console.log('history',boardHistory)
+    console.log('history',boardHistory);
+
     determineXY(movedPiece);
+    boardCoords = buildMultiArr()
     boardDom();
   }
 
