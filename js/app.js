@@ -6,8 +6,8 @@ var playGame = (function Game(){
   var $pieces = document.querySelectorAll('.piece'),
       board,
       boardCoords,
-      $board = $('.board'),
-      $reset = $('#reset'),
+      $reset = document.getElementById('reset'), //querySelectorAll
+      $replay = document.getElementById('replay'), //querySelectorAll
       boardHistory = [],
       spacerLocation= [],
       spacerIndex,
@@ -24,13 +24,13 @@ var playGame = (function Game(){
   }
 
 
-  function boardDom() {
-    for (var i = 0; i < board.length; i++) {
+  function boardDom(boardParam) {
+    for (var i = 0; i < boardParam.length; i++) {
       $pieces[i].classList.remove("spacer");
-      $pieces[i].innerText = board[i];
+      $pieces[i].innerText = boardParam[i];
 
       //check for 16th piece to use as spacer
-      if( board[i] === 16 ){
+      if( boardParam[i] === 16 ){
         $pieces[i].classList.add("spacer");
         spacerLocation = determineXY (16);
         console.log('spacerLocation',spacerLocation);
@@ -43,13 +43,30 @@ var playGame = (function Game(){
     //reset board
     board = randomBoard();
     boardHistory=[];
-    boardHistory.push(board);
+
+
+    var newBoard = [...board];//using newBoard otherwise boardHistory[0] will follow update as board is updated;
+    boardHistory[0]=newBoard;
     boardCoords = buildMultiArr();
     spacerIndex =  board.indexOf(16);
 
-    boardDom();
+    boardDom(board);
 
   }
+
+  function replay(){
+    for (let i = 0; i < boardHistory.length; i++) {
+      //closure for timeout
+      (function(j){
+        setTimeout( function (){
+          var localBoard = boardHistory[j];
+          boardDom(localBoard);
+        }, i*1000 );
+      })( i );
+
+    }
+  }
+
   function move(movedPiece){
     //handling moving peices
     spacerIndex =  board.indexOf(16)
@@ -60,19 +77,23 @@ var playGame = (function Game(){
     var xDiff = Math.abs( xyToMove[0] - spacerLocation[0] );
     var yDiff = Math.abs( xyToMove[1] - spacerLocation[1] );
 
+    //checking if position differs by one in either direction
     if( (xDiff == 1 && yDiff == 0) || (xDiff == 0 && yDiff == 1) ) {
-      boardHistory.push(board);
       board[clickedIndex]=16;
       board[spacerIndex]=movedPiece;
-      console.log('history',boardHistory);
+    } else {
+      return;
     }
 
     //Convert arrays to strings to prevent needing to iterate over each value
     if( board.toString() == winningBoard.toString()){
       console.log('Winner, winner. Chicken Dinner!');
     }
+
+    var newBoard = [...board]; //again localizing
+    boardHistory[boardHistory.length] = newBoard;
     boardCoords = buildMultiArr();
-    boardDom();
+    boardDom(board);
   }
 
   function determineXY (clickedPosition){
@@ -109,16 +130,20 @@ var playGame = (function Game(){
   }
 
   function bindEvents(){
+
+    //looping instead of event delegation
     for (let i = 0; i < $pieces.length; i++) {
       $pieces[i].addEventListener("click", function(){
         var clickedNumber = parseInt($pieces[i].innerText);
-        // console.log('clicked valued', clickedNumber)
         move(clickedNumber);
       }, false);
     }
 
-    $reset.on('click', function(){
+    $reset.addEventListener('click', function(){
       newGame();
+    });
+    $replay.addEventListener('click', function(){
+      replay();
     });
   }
 
