@@ -41,37 +41,6 @@ var playGame = (function Game(){
         spacerLocation = determineXY (16);
         console.log('spacerLocation',spacerLocation);
       }
-
-      console.log((spacerLocation[0] % 4), (i%4)+1)
-
-      // if( spacerLocation[0] % 4 == (i%4)+1 ){
-      //   $pieces[i].classList.add("clickable");
-      // }
-
-      // switch (spacerLocation[0]) {
-      //   case 1:
-      //     // console.log('hi from first column', spacerIndex);
-      //     if( i = spacerIndex ){
-      //       $pieces[i].classList.add("clickable");
-      //       console.log('hi from first column', spacerIndex);
-      //     }
-      // 
-      //     break;
-      //   default:
-      //     break;
-      //
-      // }
-    //   console.log('y col', spacerLocation[1]%4)
-    //   switch (spacerLocation[1]) {
-    //     case 1:
-    //       if((i+1)%2 == 0){
-    //         $pieces[i].classList.add("clickable");
-    //       }
-    //
-    //       break;
-    //     default:
-    //
-    //   }
     }
 
   }
@@ -90,30 +59,35 @@ var playGame = (function Game(){
   function move(movedPiece){
     //handling moving peices
     var clickedIndex = board.indexOf(movedPiece);
+    var xyToMove = determineXY(movedPiece);
     spacerIndex =  board.indexOf(16)
+    console.log("x vals", xyToMove[0], spacerLocation[0])
+    var xDiff = Math.abs( xyToMove[0] - spacerLocation[0] );
+    var yDiff = Math.abs( xyToMove[1] - spacerLocation[1] );
 
-    boardHistory.push(board);
-    board[clickedIndex]=16;
-    board[spacerIndex]=movedPiece;
-    // console.log(board);
-    console.log('history',boardHistory);
+    console.log(xDiff)
 
-    determineXY(movedPiece);
+    if( (xDiff == 1 && yDiff == 0) || (xDiff == 0 && yDiff == 1) ) {
+      boardHistory.push(board);
+      board[clickedIndex]=16;
+      board[spacerIndex]=movedPiece;
+      console.log('history',boardHistory);
+    }
+
+    console.log('latest', xyToMove, spacerLocation);
     boardCoords = buildMultiArr()
     boardDom();
   }
 
   function determineXY (clickedPosition){
-    console.log('determineXY');
     var value = clickedPosition;
     var location = [];
-    console.log('value', value);
 
     for (var outer = 0; outer < boardCoords.length; outer++) {
       for (var inner = 0; inner < 4; inner++) {
         if (boardCoords[outer][inner] == value){
           location = [inner+1, outer+1];
-          console.log(location);
+          // console.log(location);
           return location;
         }
       }
@@ -134,19 +108,16 @@ var playGame = (function Game(){
     }
 
     boardCoords = multiDimArr;
-    console.log(multiDimArr)
-
     return multiDimArr;
 
   }
 
   function bindEvents(){
-    // $board.on('click', function(e){
-    //   move($(e.target));
-    // });
     for (let i = 0; i < $pieces.length; i++) {
       $pieces[i].addEventListener("click", function(){
-        move(parseInt($pieces[i].innerText));
+        var clickedNumber = parseInt($pieces[i].innerText);
+        console.log('clicked valued', clickedNumber)
+        move(clickedNumber);
       }, false);
     }
 
@@ -158,20 +129,12 @@ var playGame = (function Game(){
   bindEvents();
 
   return {
-    newGame: newGame,
-    move: move
+    newGame: newGame
   }
 
 
 })();
 
 playGame.newGame();
-
-//Jquery elems
-
-
-
-
-
 
 })();
