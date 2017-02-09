@@ -10,7 +10,8 @@ var playGame = (function Game(){
       $reset = $('#reset'),
       boardHistory = [],
       spacerLocation= [],
-      spacerIndex;
+      spacerIndex,
+      winningBoard = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16];
 
    function randomBoard(){
     var array = []
@@ -19,9 +20,6 @@ var playGame = (function Game(){
       if(array.indexOf(randomnumber) > -1) continue;
       array[array.length] = randomnumber;
     }
-    //
-    // board = array;
-    // buildMultiArr();
     return array;
   }
 
@@ -30,10 +28,6 @@ var playGame = (function Game(){
     for (var i = 0; i < board.length; i++) {
       $pieces[i].classList.remove("spacer");
       $pieces[i].innerText = board[i];
-
-      // if( spacerLocation[1] == (i%4)+1 ){
-      //   $pieces[i].classList.add("clickable");
-      // }
 
       //check for 16th piece to use as spacer
       if( board[i] === 16 ){
@@ -58,14 +52,13 @@ var playGame = (function Game(){
   }
   function move(movedPiece){
     //handling moving peices
+    spacerIndex =  board.indexOf(16)
+
+    //local var for comparison
     var clickedIndex = board.indexOf(movedPiece);
     var xyToMove = determineXY(movedPiece);
-    spacerIndex =  board.indexOf(16)
-    console.log("x vals", xyToMove[0], spacerLocation[0])
     var xDiff = Math.abs( xyToMove[0] - spacerLocation[0] );
     var yDiff = Math.abs( xyToMove[1] - spacerLocation[1] );
-
-    console.log(xDiff)
 
     if( (xDiff == 1 && yDiff == 0) || (xDiff == 0 && yDiff == 1) ) {
       boardHistory.push(board);
@@ -74,8 +67,11 @@ var playGame = (function Game(){
       console.log('history',boardHistory);
     }
 
-    console.log('latest', xyToMove, spacerLocation);
-    boardCoords = buildMultiArr()
+    //Convert arrays to strings to prevent needing to iterate over each value
+    if( board.toString() == winningBoard.toString()){
+      console.log('Winner, winner. Chicken Dinner!');
+    }
+    boardCoords = buildMultiArr();
     boardDom();
   }
 
@@ -116,7 +112,7 @@ var playGame = (function Game(){
     for (let i = 0; i < $pieces.length; i++) {
       $pieces[i].addEventListener("click", function(){
         var clickedNumber = parseInt($pieces[i].innerText);
-        console.log('clicked valued', clickedNumber)
+        // console.log('clicked valued', clickedNumber)
         move(clickedNumber);
       }, false);
     }
