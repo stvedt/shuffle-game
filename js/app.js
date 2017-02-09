@@ -33,7 +33,7 @@ var playGame = (function Game(){
       if( boardParam[i] === 16 ){
         $pieces[i].classList.add("spacer");
         spacerLocation = determineXY (16);
-        console.log('spacerLocation',spacerLocation);
+        // console.log('spacerLocation',spacerLocation);
       }
     }
 
@@ -88,6 +88,7 @@ var playGame = (function Game(){
     //Convert arrays to strings to prevent needing to iterate over each value
     if( board.toString() == winningBoard.toString()){
       console.log('Winner, winner. Chicken Dinner!');
+      alert('Winner, winner. Chicken Dinner!');
     }
 
     var newBoard = [...board]; //again localizing
