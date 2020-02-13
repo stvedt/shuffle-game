@@ -1,5 +1,4 @@
 (function(){
-// console.log('hi');
 
 var playGame = (function Game(){
 
@@ -33,7 +32,6 @@ var playGame = (function Game(){
       if( boardParam[i] === 16 ){
         $pieces[i].classList.add("spacer");
         spacerLocation = determineXY (16);
-        // console.log('spacerLocation',spacerLocation);
       }
     }
 
@@ -105,7 +103,6 @@ var playGame = (function Game(){
       for (var inner = 0; inner < 4; inner++) {
         if (boardCoords[outer][inner] == value){
           location = [inner+1, outer+1];
-          // console.log(location);
           return location;
         }
       }
